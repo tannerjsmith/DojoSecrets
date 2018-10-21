@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'login/css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <title>wall</title>
+</head>
+<body>
+    <div class="jumbotron text-center">
+        <h1>hello {{user.firstname}}</h1>
+    </div>
+    <div class="jumbotron text-center bg-primary">
+        <form id="msgfrom" action="/addmessage" method="post">
+            {% csrf_token %}
+            <textarea type="text" name="content" cols='80' placeholder="leave a message" id="msgform"></textarea><br>
+            <input type="hidden" name="hidden" value="{{user.id}}">
+            <input type="submit" value="submit">
+        </form>
+    </div>
+    {%for post in posts%}
+    {%if user not in post.likes.all%}
+    <p>{{post.content}} - <a href="/wall/{{post.id}}/{{user.id}}">LIKE</a> - {{post.created_at | timesince}} ago  |  {{post.likes.count}} likes  |</p>
+    {%else%}
+    <p>{{post.content}} - LIKED - {{post.created_at | timesince}} ago  |  {{post.likes.count}} likes  |</p>
+    {%endif%}
+    {%endfor%}
+    <div class="container">
+            <a href="/wall">SEE RECENT POSTS</a>
+    </div>
+</body>
+</html>
